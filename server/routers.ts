@@ -15,6 +15,13 @@ import {
   getAdPlacementByPosition,
 } from "./db";
 import { invokeLLM } from "./_core/llm";
+import {
+  calculatePerformanceScore,
+  calculateSeoScore,
+  calculateEngagementMetrics,
+  analyzeTrend,
+} from "./modules/analytics";
+import { generateAdSenseCode, validateAdSensePublisherId } from "./modules/adManager";
 
 export const appRouter = router({
   system: systemRouter,
@@ -48,7 +55,6 @@ export const appRouter = router({
         })
       )
       .mutation(async ({ input, ctx }) => {
-        // Only admins can create trending topics
         if (ctx.user?.role !== "admin") {
           throw new Error("Unauthorized");
         }
@@ -79,7 +85,6 @@ export const appRouter = router({
       .query(async ({ input }) => {
         const article = await getArticleBySlug(input.slug);
         if (article) {
-          // Increment view count
           await incrementArticleViewCount(article.id);
         }
         return article;
@@ -127,15 +132,15 @@ export const appRouter = router({
           throw new Error("Unauthorized");
         }
 
-        const prompt = `你是一位专业的SEO和内容营销专家。请为以下热点话题撰写一篇吸引人的、适合网站流量变现的文章大纲。文章应具有深度和广度，吸引搜索引擎和读者。
+        const prompt = `You are a professional SEO and content marketing expert. Please write an article outline for the following trending topic that is engaging and suitable for website traffic monetization. The article should have depth and breadth to attract search engines and readers.
 
-热点话题: ${input.topic}
+Topic: ${input.topic}
 
-请以以下格式提供大纲:
-1. 建议的文章标题
-2. 文章摘要
-3. 主要段落概述
-4. 活跃的关键词`;
+Please provide the outline in the following format:
+1. Suggested article title
+2. Article summary
+3. Main section overview
+4. Active keywords`;
 
         const response = await invokeLLM({
           messages: [
@@ -153,6 +158,54 @@ export const appRouter = router({
       }),
   }),
 
+  // Analytics Router
+  analytics: router({
+    articlePerformance: publicProcedure
+      .input(z.object({ articleId: z.number() }))
+      .query(async ({ input }) => {
+        return {
+          articleId: input.articleId,
+          performanceScore: 0,
+          seoScore: 0,
+          engagementMetrics: {
+            engagementRate: 0,
+            returnVisitorRate: 0,
+            avgSessionDuration: 0,
+          },
+          trend: "stable",
+        };
+      }),
+
+    dashboardMetrics: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user?.role !== "admin") {
+        throw new Error("Unauthorized");
+      }
+      return {
+        totalArticles: 0,
+        totalPageViews: 0,
+        totalUniqueVisitors: 0,
+        avgEngagementRate: 0,
+        topArticles: [],
+        trafficTrend: [],
+      };
+    }),
+
+    trafficBySource: protectedProcedure
+      .input(z.object({ period: z.string().default("week") }))
+      .query(async ({ input, ctx }) => {
+        if (ctx.user?.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        return {
+          organic: 0,
+          direct: 0,
+          referral: 0,
+          social: 0,
+          paid: 0,
+        };
+      }),
+  }),
+
   // Ads Router
   ads: router({
     getActive: publicProcedure.query(async () => {
@@ -163,6 +216,42 @@ export const appRouter = router({
       .input(z.object({ position: z.string() }))
       .query(async ({ input }) => {
         return await getAdPlacementByPosition(input.position);
+      }),
+
+    generateAdCode: protectedProcedure
+      .input(
+        z.object({
+          publisherId: z.string(),
+          adSlot: z.string(),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+
+        if (!validateAdSensePublisherId(input.publisherId)) {
+          throw new Error("Invalid Google AdSense Publisher ID format");
+        }
+
+        const adCode = generateAdSenseCode(input.publisherId, input.adSlot);
+        return { adCode };
+      }),
+
+    revenueStats: protectedProcedure
+      .input(z.object({ period: z.string().default("month") }))
+      .query(async ({ input, ctx }) => {
+        if (ctx.user?.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        return {
+          totalRevenue: 0,
+          impressions: 0,
+          clicks: 0,
+          ctr: 0,
+          cpm: 0,
+          dailyRevenue: [],
+        };
       }),
   }),
 });
