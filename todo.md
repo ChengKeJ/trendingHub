@@ -1,6 +1,26 @@
 # Trending Hub - Project TODO
 
-## Core Features
+## 重新定位任务（进行中）
+
+### Phase 1: 更新网站文案和定位
+- [ ] 更新首页主标题和副标题
+- [ ] 修改平台特性描述（隐藏 AI/自动化细节）
+- [ ] 更新 Meta 标签和 SEO 描述
+- [ ] 修改导航和按钮文案
+
+### Phase 2: 调整首页和品牌形象
+- [ ] 重新设计首页 Hero 部分
+- [ ] 更新平台特性卡片内容
+- [ ] 调整颜色和视觉风格
+- [ ] 优化用户体验
+
+### Phase 3: 优化内容策略文档
+- [ ] 更新 OPERATIONS_GUIDE.md 中的内容策略
+- [ ] 编写内容创作指南
+- [ ] 添加编辑审核流程
+- [ ] 创建内容质量标准
+
+## 核心功能
 
 ### Phase 1: 热点数据获取与内容生成
 - [ ] 集成 Google Trends API 或第三方 API（SerpApi/Scrapeless）用于获取热点数据
@@ -89,9 +109,11 @@
 - [x] 文章详情页面实现
 - [x] Admin Dashboard 实现
 - [x] SEO 优化指南编写
+- [x] 完整文档编写（README、OPERATIONS_GUIDE、CONTRIBUTING）
 
 ## Next Steps
 
+- [ ] 更新网站文案和定位（当前进行中）
 - [ ] 集成 Google Trends API 或第三方 API
 - [ ] 实现定时任务系统
 - [ ] 添加文章编辑器

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { trpc } from "@/lib/trpc";
 import { APP_LOGO, APP_TITLE, getLoginUrl } from "@/const";
-import { Loader2, TrendingUp, Eye, Clock } from "lucide-react";
+import { Loader2, TrendingUp, Eye, Clock, Zap, Globe, BookOpen } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Home() {
@@ -51,30 +51,30 @@ export default function Home() {
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold mb-4">追踪热点，发布内容，赚取收入</h2>
+          <h2 className="text-4xl font-bold mb-4">全球热点资讯和深度分析</h2>
           <p className="text-xl text-blue-100 mb-8">
-            实时监控 Google Trends 热点词，AI 自动生成高质量内容，快速获取流量和广告收入
+            实时追踪全球热点趋势，发布专业内容分析，帮助你了解世界正在发生什么
           </p>
           <div className="flex justify-center gap-4">
             <Button size="lg" variant="secondary">
-              浏览热点文章
+              浏览最新资讯
             </Button>
             {!isAuthenticated && (
               <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-blue-600">
-                开始创作
+                订阅更新
               </Button>
             )}
           </div>
         </div>
       </section>
 
-      {/* Trending Topics Section */}
+      {/* Featured Topics Section */}
       {trends && trends.length > 0 && (
         <section className="py-12 bg-white">
           <div className="container mx-auto px-4">
             <div className="flex items-center gap-2 mb-6">
               <TrendingUp className="w-6 h-6 text-blue-600" />
-              <h3 className="text-2xl font-bold text-slate-900">当前热点</h3>
+              <h3 className="text-2xl font-bold text-slate-900">热点话题</h3>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               {trends.map((trend) => (
@@ -94,7 +94,7 @@ export default function Home() {
         </section>
       )}
 
-      {/* Articles Grid Section */}
+      {/* Latest Articles Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <h3 className="text-3xl font-bold text-slate-900 mb-8">最新文章</h3>
@@ -144,18 +144,18 @@ export default function Home() {
       {/* Features Section */}
       <section className="py-16 bg-slate-50">
         <div className="container mx-auto px-4">
-          <h3 className="text-3xl font-bold text-slate-900 mb-12 text-center">平台特性</h3>
+          <h3 className="text-3xl font-bold text-slate-900 mb-12 text-center">为什么选择 Trending Hub</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="w-6 h-6 text-blue-600" />
-                  实时热点追踪
+                  <Zap className="w-6 h-6 text-blue-600" />
+                  实时更新
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-slate-600">
-                  自动监控 Google Trends，第一时间捕捉热点话题，抢占流量先机。
+                  每天实时发布全球最新热点资讯，让你第一时间了解重要事件和趋势。
                 </p>
               </CardContent>
             </Card>
@@ -163,13 +163,13 @@ export default function Home() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Loader2 className="w-6 h-6 text-blue-600" />
-                  AI 内容生成
+                  <BookOpen className="w-6 h-6 text-blue-600" />
+                  深度分析
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-slate-600">
-                  利用 OpenAI API，自动生成 SEO 友好的高质量文章，大幅降低创作成本。
+                  专业团队提供深度分析和洞察，帮助你理解事件背后的原因和影响。
                 </p>
               </CardContent>
             </Card>
@@ -177,16 +177,32 @@ export default function Home() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Eye className="w-6 h-6 text-blue-600" />
-                  流量变现
+                  <Globe className="w-6 h-6 text-blue-600" />
+                  全球视野
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-slate-600">
-                  集成 Google AdSense，实时追踪广告收入，多渠道变现热点流量。
+                  覆盖全球热点话题，从科技、商业、文化到社会，应有尽有。
                 </p>
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section className="py-12 bg-blue-50">
+        <div className="container mx-auto px-4 text-center">
+          <h3 className="text-2xl font-bold text-slate-900 mb-4">订阅我们的新闻通讯</h3>
+          <p className="text-slate-600 mb-6">每周精选热点资讯和深度分析，直接送到你的邮箱</p>
+          <div className="flex justify-center gap-2 max-w-md mx-auto">
+            <input
+              type="email"
+              placeholder="输入你的邮箱"
+              className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+            />
+            <Button className="bg-blue-600 hover:bg-blue-700">订阅</Button>
           </div>
         </div>
       </section>
@@ -195,7 +211,7 @@ export default function Home() {
       <footer className="bg-slate-900 text-white py-8">
         <div className="container mx-auto px-4 text-center">
           <p className="text-slate-400">
-            © 2025 {APP_TITLE}. 追踪热点，发布内容，赚取收入。
+            © 2025 {APP_TITLE}. 全球热点资讯和深度分析平台。
           </p>
         </div>
       </footer>
